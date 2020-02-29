@@ -1,0 +1,41 @@
+# port_proxy前端代码整合到后台static
++ 编译前端代码```yarn build```
++ 复制到dist文件夹下面的内容到后台代码的port_proxy/static
+
+
+# Vue-Admin-Demo
+
+> 这是一个基于vue2.0 + elementUI 后台管理平台
+
+### 技术栈
+- 传说中的VUE全家桶(vue vue-router vuex)
+- axios
+- [Element UI](http://element-cn.eleme.io/#/zh-CN)
+- [Mock](http://mockjs.com)（生成随机数据，屌屌的）
+
+## 在线演示
+
+### 线上访问
+
+[在线演示戳我!戳我!](https://xiahuahua.github.io/vue-admin-demo)
+
+## 安装运行（Build Setup）
+
+``` bash
+# install dependencies
+npm install
+
+# serve with hot reload at localhost:8080
+npm run dev
+
+# build for production with minification
+npm run build
+
+```
+
+## 预览效果
+
+![xiahuahua](https://github.com/xiahuahua/vue-admin-demo/blob/master/src/assets/jtImg1.png)
+![xiahuahua](https://github.com/xiahuahua/vue-admin-demo/blob/master/src/assets/jtImg2.png)
+![xiahuahua](https://github.com/xiahuahua/vue-admin-demo/blob/master/src/assets/jtImg3.png)
+![xiahuahua](https://github.com/xiahuahua/vue-admin-demo/blob/master/src/assets/jtImg4.png)

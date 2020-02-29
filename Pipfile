@@ -1,0 +1,19 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.douban.com/simple"
+verify_ssl = true
+
+[dev-packages]
+pylint = "*"
+autopep8 = "*"
+
+[packages]
+django = "*"
+djangorestframework = "*"
+djangorestframework-jwt = "*"
+pycrypto = "*"
+fabric = "*"
+uwsgi = "*"
+
+[requires]
+python_version = "3.7"

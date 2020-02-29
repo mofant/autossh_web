@@ -1,0 +1,25 @@
+
+POST http://localhost:8000/api/services/ HTTP/1.1
+Content-Type: application/json
+Authorization: JWT eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJ1c2VybmFtZSI6ImFkbWluIiwiZXhwIjoxNTgxMjE1NDA5LCJlbWFpbCI6ImFkbWluQGV4YW1wbGUuY29tIn0.H5uMUUD7UILkPWRAn59UgALu-YO8XPPB41AJP0KIMBY
+
+# {
+#     "name": "some",
+#     "port": 22,
+#     "dep_server": 2
+# }
+
+
+{
+    "dep_server": {
+        "id": 2,
+        "password": "******",
+        "name": "some",
+        "host": "116.85.23.222",
+        "port": 22,
+        "username": "dc2-user",
+        "server_type": "PROXY"
+    },
+    "name": "some_23",
+    "port": 22
+}

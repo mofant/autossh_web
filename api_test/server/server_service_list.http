@@ -1,0 +1,10 @@
+GET http://localhost:8000/api/server/services/
+Authorization: JWT eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJ1c2VybmFtZSI6ImFkbWluIiwiZXhwIjoxNTgxMjE1NDA5LCJlbWFpbCI6ImFkbWluQGV4YW1wbGUuY29tIn0.H5uMUUD7UILkPWRAn59UgALu-YO8XPPB41AJP0KIMBY
+
+# POST http://localhost:8000/api/servers/
+# Content-Type: application/json
+
+# {
+#     "name": "some",
+#     "sf": "asdf"
+# }
