@@ -291,6 +291,7 @@
 									message: '删除成功',
 									type: 'success'
 								});
+								this.getProxys();
 							});
 						}else{
 							this.$message({
@@ -307,10 +308,10 @@
 									type: 'success'
 								});
 								});
+								this.getProxys();
 							});
 						}
 					});
-					this.getProxys();
 				}).catch(() => {
 
 				});

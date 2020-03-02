@@ -192,12 +192,12 @@
             },
 			//删除
 			handleDel: function (index, row) {
-				this.$confirm('确认删除该记录吗?', '提示', {
+				this.$confirm('确定一并停止并删除已有代理吗?', '提示', {
 					type: 'warning'
 				}).then(() => {
 					this.listLoading = true;
 					//NProgress.start();
-					let para = { uid: row.uid };
+					let para = { id: row.id };
 					delService(para).then((res) => {
 						this.listLoading = false;
 						//NProgress.done();
