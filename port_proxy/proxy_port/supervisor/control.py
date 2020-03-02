@@ -84,7 +84,8 @@ class SupervisorCtl:
                 1].strip().split(" ")
             autossh_cmd = f"autossh -M {infos[3]} -NR {infos[5]}:127.0.0.1:{infos[4]} {infos[1]}@{infos[0]}"
             pid = autossh_stater.get_autossh_state(autossh_cmd)
-            kill_pid(self.conn, pid)
+            if pid:
+                kill_pid(self.conn, pid)
         return True
 
     def delete_task(self, task_name):

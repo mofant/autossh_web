@@ -1,3 +1,5 @@
+from django.db.models.signals import pre_delete
+from django.dispatch import receiver
 from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -6,6 +8,16 @@ from rest_framework import generics
 from interface.serializer.server import ServerSerializer, ServerServiceListSerializer
 from interface.models.server import Server
 # Create your views here.
+from .service import delete_deploy_proxy_by_service
+
+@receiver(pre_delete, sender=Server)
+def handle_delete_server(sender, instance, **kwargs):
+    if isinstance(instance, Server):
+        services = instance.service_list.all()
+        for each_service in services:
+            print("deleting server")
+            delete_deploy_proxy_by_service(each_service)
+
 
 
 class ServerListView(mixins.ListModelMixin,
@@ -20,27 +32,6 @@ class ServerListView(mixins.ListModelMixin,
     def post(self, request, *args, **kwargs):
         return self.create(request, *args, **kwargs)
 
-
-# class ServerDetailView(APIView):
-
-#     def get_object(self, pk):
-#         try:
-#             return Snippet.objects.get(pk=pk)
-#         except Snippet.DoesNotExist:
-#             raise Http404
-
-#     def get(self, request, pk):
-#         server = self.get_object(pk)
-#         serializer = ServerSerializer(instance=server)
-#         return Response(serializer.data)
-
-#     def put(self, request, pk):
-#         server = self.get_object(pk)
-#         serializer = SnippetSerializer(snippet, data=request.data)
-#         if serializer.is_valid():
-#             serializer.save()
-#             return Response(serializer.data)
-#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class ServerDetailView(mixins.RetrieveModelMixin,
                        mixins.UpdateModelMixin,

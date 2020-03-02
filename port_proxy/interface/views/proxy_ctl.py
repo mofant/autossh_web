@@ -16,6 +16,9 @@ from django.conf import settings
 from proxy_port.common import general_autossh_cmd
 
 
+
+
+
 class ProxyServiceCtlView(APIView):
 
     def _get_proxy_service(self, pk):
@@ -53,6 +56,23 @@ class ProxyServiceCtlView(APIView):
         state = autossh_state.get_autossh_stete(task_name, task_type)
         return state
 
+    @staticmethod
+    def delete_deploy_proxy(proxy_service: ProxyService, proxy_task: ProxyTask):
+        service_server = proxy_service.service.dep_server
+        fabric_conn = ProxyServiceCtlView.get_proxy_connection(service_server)
+        ctl = AutosshCtl(fabric_conn)
+        if proxy_task.dep_type == "AUTOSSH":
+            proxy_server = proxy_task.proxy_server
+            res = ctl.delete_autossh(service_port=proxy_task.service_port,
+                                     listing_port=proxy_task.listing_port,
+                                     proxy_port=proxy_task.proxy_port,
+                                     proxy_host=proxy_server.host,
+                                     username=proxy_server.username)
+        else:
+            res = ctl.delete_autossh(
+                supervisor_task_name=proxy_task.supervisor_task_name)        
+        return res
+
     def get(self, request, pk):
         """
         获取proxy service的运行状态
@@ -69,6 +89,8 @@ class ProxyServiceCtlView(APIView):
         fabric_conn = self.get_proxy_connection(service_server)
         state = self._get_autossh_state(
             fabric_conn, proxy_task, proxy_task.proxy_server)
+        if not state:
+            state = {"state": "NO RUNNING"}
         return Response(state)
 
     def post(self, request, pk):
@@ -141,27 +163,29 @@ class ProxyServiceCtlView(APIView):
         """
         删除服务 
         """
-        proxy_sercice = self._get_proxy_service(pk)
-        if proxy_sercice.state == "CREATED":
+        proxy_service = self._get_proxy_service(pk)
+        if proxy_service.state == "CREATED":
             return Response("该代理还没有部署")
 
-        proxy_task = self._get_proxy_task(proxy_sercice)
+        proxy_task = self._get_proxy_task(proxy_service)
         if not proxy_task:
             return Response("该代理没有部署成功，请重新部署")
 
-        service_server = proxy_sercice.service.dep_server
-        fabric_conn = self.get_proxy_connection(service_server)
-        ctl = AutosshCtl(fabric_conn)
-        if proxy_task.dep_type == "AUTOSSH":
-            proxy_server = proxy_task.proxy_server
-            res = ctl.delete_autossh(service_port=proxy_task.service_port,
-                                     listing_port=proxy_task.listing_port,
-                                     proxy_port=proxy_task.proxy_port,
-                                     proxy_host=proxy_server.host,
-                                     username=proxy_server.username)
-        else:
-            res = ctl.delete_autossh(
-                supervisor_task_name=proxy_task.supervisor_task_name)
+        res = self.__class__.delete_deploy_proxy(proxy_service, proxy_task)
+
+        # service_server = proxy_service.service.dep_server
+        # fabric_conn = self.get_proxy_connection(service_server)
+        # ctl = AutosshCtl(fabric_conn)
+        # if proxy_task.dep_type == "AUTOSSH":
+        #     proxy_server = proxy_task.proxy_server
+        #     res = ctl.delete_autossh(service_port=proxy_task.service_port,
+        #                              listing_port=proxy_task.listing_port,
+        #                              proxy_port=proxy_task.proxy_port,
+        #                              proxy_host=proxy_server.host,
+        #                              username=proxy_server.username)
+        # else:
+        #     res = ctl.delete_autossh(
+        #         supervisor_task_name=proxy_task.supervisor_task_name)
         if res:
             return Response({"msg": "删除部署成功"})
         return Response("删除部署失败")

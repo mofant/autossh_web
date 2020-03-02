@@ -35,7 +35,7 @@ class AutosshInit:
         if upload_file(self.conn, self.run_autossh_sh_file, "~/.autossh/run_autossh_by_native.sh"):
             chmod_x_cmd = "chmod +x ~/.autossh/run_autossh_by_native.sh"
             res = self.conn.sudo(
-                chmod_x_cmd, password=conn.connect_kwargs['password'], warn=True)
+                chmod_x_cmd, password=self.conn.connect_kwargs['password'], warn=True)
             return is_cmd_success(res)
         raise RuntimeError("cannot upload run_autossh_by_native.sh file")
 
@@ -48,22 +48,20 @@ class AutosshInit:
         """
         查询服务器是否初始化了autossh的环境。
         """
-        check_cmd = "cat ~/.autossh/run_autossh_by_native.sh"
-        res = self.conn.run(check_cmd)
-        return is_cmd_success(res)
-
-    def init(self, system_):
+        try:
+            check_cmd = "cat ~/.autossh/run_autossh_by_native.sh"
+            res = self.conn.run(check_cmd)
+            return is_cmd_success(res)
+        except Exception:
+            return False
+        
+    def init(self):
         """
         初始化服务器的autossh运行脚本，不包含安装软件服务
         """
-        install_dependence_software(self.conn, )
+        # install_dependence_software(self.conn, )
         self._mkdir()
         return self._upload_run_sh_file()
-
-    # def start_autossh(self, run_autossh_bash_cmd):
-    #     self._mkdir()
-    #     self._upload_run_sh_file()
-    #     return self._run_autossh_cmd(run_autossh_bash_cmd)
 
 
 class RAutosshCtl:

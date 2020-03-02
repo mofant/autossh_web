@@ -1,3 +1,4 @@
+import traceback
 from rest_framework.views import APIView
 from rest_framework import status
 from rest_framework.response import Response
@@ -12,6 +13,7 @@ from utils import short_uuid
 from proxy_port.utils import install_dependence_software, is_port_using
 from .proxy_ctl import ProxyServiceCtlView
 from proxy_port.supervisor.initialization import SupervisorConfiger
+from proxy_port.autossh import AutosshInit
 
 
 class ProxyListView(mixins.ListModelMixin,
@@ -40,6 +42,11 @@ class ProxyListView(mixins.ListModelMixin,
         if res:
             return True
         return False
+    
+    def _config_autossh(self, conn):
+        autossh_initer = AutosshInit(conn)
+        res = autossh_initer.init()
+        return res
 
     def _install_dependense(self, conn, proxy_service, server):
         """
@@ -57,6 +64,9 @@ class ProxyListView(mixins.ListModelMixin,
             # 若果之前没有部署supervisor, 现在要求采用supervisor部署，那么将重新配置supervisor
             server.is_dep_supervisor = self._config_supervisor(conn, True)
             need_save_server = True
+        elif server.is_install_dep and not proxy_service.dep_supervisor and not server.is_dep_autossh:
+            server.is_dep_autossh = self._config_autossh(conn)
+            need_save_server = True
         if need_save_server:
             server.save()
         return True
@@ -67,8 +77,8 @@ class ProxyListView(mixins.ListModelMixin,
         """
         used_proxy_ports = ProxyTask.objects.filter(
             proxy_server=server).values('listing_port').distinct()
-        use_port_set = set(range(6100, 6200))
-        use_ports = use_port_set - set(used_proxy_ports)
+        use_port_set = set(list(range(6100, 6200)))
+        use_ports = use_port_set - set([x['listing_port'] for x in list(used_proxy_ports)])
         for port in use_ports:
             if not is_port_using(conn, port):
                 return port
@@ -126,7 +136,8 @@ class ProxyListView(mixins.ListModelMixin,
             proxy_service.delete()
             return Response(str(e))
         except Exception as e:
-            # proxy_service.delete()
+            if proxy_service:
+                proxy_service.delete()
             raise
 
 

@@ -27,6 +27,7 @@ class Server(models.Model):
                                    default=ServerType.DEPLOY
                                    )
     is_dep_supervisor = models.BooleanField("是否部署了supervisor", default=False)
+    is_dep_autossh = models.BooleanField("是否部署了autossh脚本", default=False)
     is_install_dep = models.BooleanField("是否安装了以来软件", default=False)
     system_type = models.CharField("系统类型",
                                    max_length=10,
