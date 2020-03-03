@@ -61,12 +61,16 @@
                   type: 'error'
                 });
               } else {
-                console.log(data);
                 this.$store.dispatch("set_token",data.token);
                 sessionStorage.setItem('user', JSON.stringify(data));
-                console.log("redict to home");
                 this.$router.push({ path: '/Proxy' });
               }
+            }).catch(error => {
+                this.$message({
+                  message: "用户名或密码错误",
+                  type: 'error'
+                });
+                this.logining = false;
             });
           } else {
             console.log('error submit!!');
