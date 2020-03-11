@@ -45,7 +45,7 @@ def kill_pid(conn, pid):
     return is_cmd_success(res)
 
 
-def upload_file(conn, source_file, des_file, replace=False):
+def upload_file(conn, source_file, des_file, replace=False, root=True):
     """
     使用sudo上传文件 ，确保文件夹存在。
     为了确保文件上传，先上传到tmp目录，然后在迁移到目标路径
@@ -54,17 +54,24 @@ def upload_file(conn, source_file, des_file, replace=False):
         source_file: 源文件路径
         des_file: 上传后的文件路径
         replace: 是否覆盖
+        root: 是否使用sudo上传
     """
     try:
         temp_filename = str(uuid.uuid1())
         conn.put(source_file, f'/tmp/{temp_filename}')
         if not replace:
             cmd = f"cp -i /tmp/{temp_filename} {des_file}"
-            res = conn.sudo('''awk 'BEGIN { cmd="''' + cmd + '''"; print "n" |cmd; }' ''',
-                            password=conn.connect_kwargs['password'], warn=True)
+            if root:
+                res = conn.sudo('''awk 'BEGIN { cmd="''' + cmd + '''"; print "n" |cmd; }' ''',
+                                password=conn.connect_kwargs['password'], warn=True)
+            else:
+                res = conn.run(cmd, warn=True)
         else:
-            res = conn.sudo(
-                f"mv -f /tmp/{temp_filename} {des_file}", password=conn.connect_kwargs['password'])
+            if root:
+                res = conn.sudo(
+                    f"mv -f /tmp/{temp_filename} {des_file}", password=conn.connect_kwargs['password'])
+            else:
+                res = conn.run(f"mv -f /tmp/{temp_filename} {des_file}")
         return is_cmd_success(res)
     except Exception as e:
         raise RuntimeError("cannot upload cofnig file")

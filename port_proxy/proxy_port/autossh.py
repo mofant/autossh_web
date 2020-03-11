@@ -32,7 +32,7 @@ class AutosshInit:
         return True
 
     def _upload_run_sh_file(self):
-        if upload_file(self.conn, self.run_autossh_sh_file, "~/.autossh/run_autossh_by_native.sh"):
+        if upload_file(self.conn, self.run_autossh_sh_file, "~/.autossh/run_autossh_by_native.sh", False, False):
             chmod_x_cmd = "chmod +x ~/.autossh/run_autossh_by_native.sh"
             res = self.conn.sudo(
                 chmod_x_cmd, password=self.conn.connect_kwargs['password'], warn=True)
