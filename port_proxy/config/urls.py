@@ -22,5 +22,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path("api/", include(interface_url)),
     path('api-token-auth/', obtain_jwt_token),
-    path("index", interface_url.index_view),
+    path("", interface_url.index_view),
 ]

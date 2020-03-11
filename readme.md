@@ -28,7 +28,7 @@ python manage.py migrate interface
 + 创建管理员: ```python manage.py createsuperuser```
 + 注释或修改uwsgi.ini中的```virtualenv```
 + 启动：```cd port_proxy``` and ```uwsgi --ini uwsgi.ini``` 或``` python manage.py runserver```
-+ 浏览器输入:```localhost:8000/index```
++ 浏览器输入:```localhost:8000```
 
 ### 修改前端代码
 修改前端代码参考[READMME_fe](READMME_fe.md)
