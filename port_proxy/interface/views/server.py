@@ -15,7 +15,6 @@ def handle_delete_server(sender, instance, **kwargs):
     if isinstance(instance, Server):
         services = instance.service_list.all()
         for each_service in services:
-            print("deleting server")
             delete_deploy_proxy_by_service(each_service)
 
 

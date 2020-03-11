@@ -107,8 +107,9 @@ class ProxyListView(mixins.ListModelMixin,
             conn = ProxyServiceCtlView.get_proxy_connection(service_server)
 
             proxy_server = proxy_service.proxy_server
+            proxy_conn = ProxyServiceCtlView.get_proxy_connection(proxy_server)
             # 校验端口是否被占用
-            if self._check_proxy_port_usable(conn, proxy_server, proxy_service.proxy_port):
+            if self._check_proxy_port_usable(proxy_conn, proxy_server, proxy_service.proxy_port):
                 proxy_service.delete()
                 return Response("代理端口被占用")
                 #raise RuntimeError("proxy_port is using")
@@ -122,7 +123,7 @@ class ProxyListView(mixins.ListModelMixin,
             if proxy_service.dep_supervisor:
                 supervisor_task_name = "port_proxy_"+short_uuid()
 
-            proxy_conn = ProxyServiceCtlView.get_proxy_connection(proxy_server)
+            
             listing_port = self._get_usable_port(proxy_conn, proxy_server)
             proxy_task = self._create_proxy_task(
                 proxy_service, supervisor_task_name, listing_port)
