@@ -38,7 +38,7 @@ let base = '';
 
 let api = "/api"
 
-export const requestLogin = params => { return axios.post('/api-token-auth/', params).then(res => res.data); };
+export const requestLogin = params => { return axios.post('/api/token/', params).then(res => res.data); };
 
 
 // gov user模块

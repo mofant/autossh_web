@@ -10,10 +10,10 @@ autopep8 = "*"
 [packages]
 django = "*"
 djangorestframework = "*"
-djangorestframework-jwt = "*"
 pycrypto = "*"
 fabric = "*"
 uwsgi = "*"
+djangorestframework-simplejwt = "*"
 
 [requires]
 python_version = "3.7"

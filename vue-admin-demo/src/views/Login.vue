@@ -61,7 +61,7 @@
                   type: 'error'
                 });
               } else {
-                this.$store.dispatch("set_token",data.token);
+                this.$store.dispatch("set_token",data.access);
                 sessionStorage.setItem('user', JSON.stringify(data));
                 this.$router.push({ path: '/Proxy' });
               }
