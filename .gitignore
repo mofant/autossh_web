@@ -147,3 +147,4 @@ yarn-error.log*
 # port_proxy
 /port_proxy/proxy_port/test/server_info.py
 /port_proxy/interface/migrations/
+Pipfile.lock
