@@ -288,14 +288,20 @@ export default {
             // para.birth = (!para.birth || para.birth == '') ? '' : util.formatDate.format(new Date(para.birth), 'yyyy-MM-dd');
             modifyServer(para).then(res => {
               this.editLoading = false;
-              //NProgress.done();
-              this.$message({
-                message: "提交成功",
-                type: "success"
-              });
-              this.$refs["editForm"].resetFields();
-              this.editFormVisible = false;
-              this.getServerList();
+              if (res.data.code === 200) {
+                this.$message({
+                  message: "提交成功",
+                  type: "success"
+                });
+                this.$refs["editForm"].resetFields();
+                this.editFormVisible = false;
+                this.getServerList();
+              } else {
+                this.$message({
+                  message: res.data.msg,
+                  type: "error"
+                });
+              }
             });
           });
         }

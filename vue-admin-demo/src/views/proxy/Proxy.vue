@@ -223,11 +223,16 @@ export default {
         console.log(res);
         if (res.data.code == 200) {
           this.proxys[index].run_state = res.data.data.state;
+          this.$message({
+            message: "刷新成功",
+            type: "success"
+          });
+        } else {
+          this.$message({
+            message: res.data.msg,
+            type: "error"
+          });
         }
-        this.$message({
-          message: "刷新成功",
-          type: "success"
-        });
       });
     },
     handleStart: function(index, row) {

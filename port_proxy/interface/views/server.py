@@ -9,6 +9,11 @@ from interface.serializer.server import ServerSerializer, ServerServiceListSeria
 from interface.models.server import Server
 # Create your views here.
 from .service import delete_deploy_proxy_by_service
+from proxy_port.utils import is_server_connectable
+from rest_framework.response import Response
+from utils import AESCrypt
+from config.settings import AES_KEY
+
 
 @receiver(pre_delete, sender=Server)
 def handle_delete_server(sender, instance, **kwargs):
@@ -16,7 +21,6 @@ def handle_delete_server(sender, instance, **kwargs):
         services = instance.service_list.all()
         for each_service in services:
             delete_deploy_proxy_by_service(each_service)
-
 
 
 class ServerListView(mixins.ListModelMixin,
@@ -29,7 +33,15 @@ class ServerListView(mixins.ListModelMixin,
         return self.list(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
-        return self.create(request, *args, **kwargs)
+        if is_server_connectable(
+                host=request.data.get("host"),
+                port=int(request.data.get("port")),
+                user=request.data.get("username"),
+                password=request.data.get("password")):
+            res = self.create(request, *args, **kwargs)
+            return self.create(request, *args, **kwargs)
+        else:
+            return Response("服务器无法连接，请检查连接信息")
 
 
 class ServerDetailView(mixins.RetrieveModelMixin,
@@ -43,7 +55,20 @@ class ServerDetailView(mixins.RetrieveModelMixin,
         return self.retrieve(request, *args, **kwargs)
 
     def put(self, request, *args, **kwargs):
-        return self.update(request, *args, **kwargs)
+        passwd = request.data.get("password")
+        server = Server.objects.filter(id=kwargs.get('pk')).first()
+        aes = AESCrypt(AES_KEY)
+        passwd = passwd if passwd != "******" else aes.aesdecrypt(
+            server.password)
+
+        if is_server_connectable(
+                host=request.data.get("host"),
+                port=int(request.data.get("port")),
+                user=request.data.get("username"),
+                password=passwd):
+            request.data['password'] = passwd
+            return self.update(request, *args, **kwargs)
+        return Response("服务器无法连接，请检查连接信息")
 
     def delete(self, request, *args, **kwargs):
         return self.destroy(request, *args, **kwargs)

@@ -2,7 +2,7 @@
 返回数据统一封装类
 """
 import json
-
+from django.http import HttpResponse
 
 class WrapResponseDataMiddleware:
 
@@ -45,6 +45,11 @@ class WrapResponseDataMiddleware:
 
     def process_exception(self, request, exception):
         """
-
+        全局的异常处理
         """
+        if isinstance(exception, RuntimeError):
+            msg = exception.args[0]
+            response = HttpResponse()
+            response.data = msg
+            return response
         return None

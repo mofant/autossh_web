@@ -15,9 +15,17 @@ def create_connect(*,
         "host": host,
         "user": user,
         "port": port,
+        "connect_timeout": 10,
         "connect_kwargs": {"password": password}
     }
-    return Connection(**connect_params)
+    try:
+        conn = Connection(**connect_params)
+        conn.open()
+        if not conn.is_connected:
+            raise RuntimeError("无法连接服务器，请确认连接信息")
+        return conn
+    except Exception as e:
+        raise RuntimeError("无法连接服务器，请确认连接信息")
 
 
 def is_cmd_success(res):

@@ -3,6 +3,7 @@ import uuid
 import os
 from .client import is_cmd_success
 from invoke.exceptions import UnexpectedExit
+from fabric import Connection
 
 port_listing_patterm_pre = ".*?(?:[0-9]{1,3}\.){3}[0-9]{1,3}:"
 
@@ -96,3 +97,38 @@ def install_dependence_software(conn, system_type="ubuntu", install_supervisor=F
     res = conn.sudo(
         install_cmd, password=conn.connect_kwargs['password'], warn=True)
     return is_cmd_success(res)
+
+
+def is_server_connectable(*,
+                          host: str,
+                          port: int,
+                          user: str,
+                          password: str
+                          ) -> bool:
+    """校验服务器是否可以被联通。
+
+    Arguments:
+        host {str} -- hostname or ip address
+        port {int} -- ssh port
+        user {str} -- ssh username
+        password {str} -- ssh password
+
+    Returns:
+        [bool] -- server is connectable or not
+    """
+    connect_params = {
+        "host": host,
+        "user": user,
+        "port": port,
+        "connect_timeout": 10,
+        "connect_kwargs": {"password": password}
+    }
+    conn = Connection(**connect_params)
+    try:
+        conn.open()
+        if conn.is_connected:
+            conn.disconnect()
+            return True
+        return False
+    except Exception as e:
+        return False

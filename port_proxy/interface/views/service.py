@@ -20,9 +20,6 @@ def delete_deploy_proxy_by_service(service):
     for proxy_service in proxy_services:
         proxy_task = ProxyTask.objects.get(proxy_service=proxy_service)
         res = ProxyServiceCtlView.delete_deploy_proxy(proxy_service, proxy_task)
-        print("#####asdfasdfasdfasdfasdf####")    
-    # else:
-    print("not asdfasdfasd")
 
 
 @receiver(pre_delete, sender=Service)
