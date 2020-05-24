@@ -3,12 +3,12 @@
     <!--工具条-->
     <el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
       <el-form :inline="true" :model="filters">
-        <el-form-item>
+        <!-- <el-form-item>
           <el-input v-model="filters.name" placeholder="代理名称"></el-input>
-        </el-form-item>
-        <el-form-item>
+        </el-form-item> -->
+        <!-- <el-form-item>
           <el-button type="primary" v-on:click="getProxys">查询</el-button>
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item>
           <el-button type="primary" @click="handleAdd">新增</el-button>
         </el-form-item>
@@ -42,7 +42,7 @@
 
     <!--工具条-->
     <el-col :span="24" class="toolbar">
-      <el-button type="danger" @click="batchRemove" :disabled="this.sels.length===0">批量删除</el-button>
+      <!-- <el-button type="danger" @click="batchRemove" :disabled="this.sels.length===0">批量删除</el-button> -->
       <el-pagination
         layout="prev, pager, next"
         @current-change="handleCurrentChange"
@@ -395,28 +395,28 @@ export default {
       this.sels = sels;
     },
     //批量删除
-    batchRemove: function() {
-      var ids = this.sels.map(item => item.uid);
-      console.log(ids);
-      this.$confirm("确认删除选中记录吗？", "提示", {
-        type: "warning"
-      })
-        .then(() => {
-          this.listLoading = true;
-          //NProgress.start();
-          // let para =  {uids: ids} ;
-          batchDel(ids).then(res => {
-            this.listLoading = false;
-            //NProgress.done();
-            this.$message({
-              message: "删除成功",
-              type: "success"
-            });
-            this.getProxys();
-          });
-        })
-        .catch(() => {});
-    }
+    // batchRemove: function() {
+    //   var ids = this.sels.map(item => item.uid);
+    //   console.log(ids);
+    //   this.$confirm("确认删除选中记录吗？", "提示", {
+    //     type: "warning"
+    //   })
+    //     .then(() => {
+    //       this.listLoading = true;
+    //       //NProgress.start();
+    //       // let para =  {uids: ids} ;
+    //       batchDel(ids).then(res => {
+    //         this.listLoading = false;
+    //         //NProgress.done();
+    //         this.$message({
+    //           message: "删除成功",
+    //           type: "success"
+    //         });
+    //         this.getProxys();
+    //       });
+    //     })
+    //     .catch(() => {});
+    // }
   },
   mounted() {
     this.getServers();

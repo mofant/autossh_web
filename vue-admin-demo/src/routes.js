@@ -1,6 +1,6 @@
 import Login from './views/Login.vue'
 import NotFound from './views/404.vue'
-import Index from './views/Index.vue'
+// import Index from './views/Index.vue'
 import Home from './views/Home.vue'
 import Server from './views/server/Server.vue'
 import Service from './views/service/Service.vue'
@@ -20,16 +20,16 @@ let routes = [
         hidden: true
     },
     //{ path: '/main', component: Main },
-    {
-        path: '/',
-        component: Home,
-        name: '',
-        iconCls: 'el-icon-menu',
-        leaf: true,//只有一个节点
-        children: [
-            { path: '/Index', component: Index, name: '首页' }
-        ]
-    },
+    // {
+    //     path: '/',
+    //     component: Home,
+    //     name: '',
+    //     iconCls: 'el-icon-menu',
+    //     leaf: true,//只有一个节点
+    //     children: [
+    //         { path: '/Index', component: Index, name: '首页' }
+    //     ]
+    // },
     {
         path: '/',
         component: Home,

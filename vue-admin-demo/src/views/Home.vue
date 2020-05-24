@@ -13,8 +13,8 @@
 				<el-dropdown trigger="hover">
 					<span class="el-dropdown-link userinfo-inner"><img :src="this.sysUserAvatar" /> {{sysUserName}}</span>
 					<el-dropdown-menu slot="dropdown">
-						<el-dropdown-item>我的消息</el-dropdown-item>
-						<el-dropdown-item>设置</el-dropdown-item>
+						<!-- <el-dropdown-item>我的消息</el-dropdown-item>
+						<el-dropdown-item>设置</el-dropdown-item> -->
 						<el-dropdown-item divided @click.native="logout">退出登录</el-dropdown-item>
 					</el-dropdown-menu>
 				</el-dropdown>
@@ -75,7 +75,7 @@
 	export default {
 		data() {
 			return {
-				sysName:'ProxyPort by VUEADMIN',
+				sysName:'隧道管理器',
 				collapsed:false,
 				sysUserName: '',
 				sysUserAvatar: '',
