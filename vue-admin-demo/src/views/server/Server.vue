@@ -179,6 +179,7 @@ export default {
       servers: [],
       total: 0,
       page: 1,
+      limit: 10,
       listLoading: false,
       sels: [], //列表选中列
 
@@ -228,10 +229,17 @@ export default {
     },
     //获取服务器列表
     getServerList() {
+      var offset = (this.page - 1) * this.limit;
       let para = {
         page: this.page,
-        name: this.filters.name
-      };
+        name: this.filters.name,
+        limit: this.limit,
+        offset: offset,
+      };      
+      // let para = {
+      //   page: this.page,
+      //   name: this.filters.name
+      // };
       this.listLoading = true;
       getServerList(para).then(res => {
         this.total = res.data.data.count;

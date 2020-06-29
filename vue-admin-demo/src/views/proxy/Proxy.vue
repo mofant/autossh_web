@@ -135,6 +135,7 @@ export default {
       services: [],
       total: 0,
       page: 1,
+      limit: 10,
       listLoading: false,
       sels: [], //列表选中列
 
@@ -166,13 +167,20 @@ export default {
   },
   methods: {
     getProxys() {
+      var offset = (this.page - 1) * this.limit;
       let para = {
         page: this.page,
-        name: this.filters.name
-      };
+        name: this.filters.name,
+        limit: this.limit,
+        offset: offset,
+      };         
+      // let para = {
+      //   page: this.page,
+      //   name: this.filters.name
+      // };
       this.listLoading = true;
       getProxyList(para).then(res => {
-        this.total = 10;
+        this.total = res.data.data.count;
         res.data.data.results.forEach(proxy => {
           proxy.run_state = "";
         });
@@ -182,14 +190,14 @@ export default {
     },
 
     //获取服务器列表
-    getServers() {
+    getServers() {   
       let para = {
         page: this.page,
         name: this.filters.name
       };
       this.listLoading = true;
       getServerList(para).then(res => {
-        this.total = res.data.data.count;
+        //this.total = res.data.data.count;
         this.servers = res.data.data.results;
         this.listLoading = false;
       });
@@ -202,7 +210,7 @@ export default {
       };
       this.listLoading = true;
       getServiceList(para).then(res => {
-        this.total = res.data.data.count;
+        //this.total = res.data.data.count;
         this.services = res.data.data.results;
         this.listLoading = false;
       });
@@ -213,7 +221,7 @@ export default {
     },
     handleCurrentChange(val) {
       this.page = val;
-      this.getUsers();
+      this.getProxys();
     },
 
     // 刷新状态

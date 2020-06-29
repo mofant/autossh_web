@@ -1,8 +1,11 @@
 var SIGN_REGEXP = /([yMdhsm])(\1*)/g;
 var DEFAULT_PATTERN = 'yyyy-MM-dd';
+
 function padding(s, len) {
     var len = len - (s + '').length;
-    for (var i = 0; i < len; i++) { s = '0' + s; }
+    for (var i = 0; i < len; i++) {
+        s = '0' + s;
+    }
     return s;
 };
 
@@ -24,13 +27,20 @@ export default {
             pattern = pattern || DEFAULT_PATTERN;
             return pattern.replace(SIGN_REGEXP, function ($0) {
                 switch ($0.charAt(0)) {
-                    case 'y': return padding(date.getFullYear(), $0.length);
-                    case 'M': return padding(date.getMonth() + 1, $0.length);
-                    case 'd': return padding(date.getDate(), $0.length);
-                    case 'w': return date.getDay() + 1;
-                    case 'h': return padding(date.getHours(), $0.length);
-                    case 'm': return padding(date.getMinutes(), $0.length);
-                    case 's': return padding(date.getSeconds(), $0.length);
+                    case 'y':
+                        return padding(date.getFullYear(), $0.length);
+                    case 'M':
+                        return padding(date.getMonth() + 1, $0.length);
+                    case 'd':
+                        return padding(date.getDate(), $0.length);
+                    case 'w':
+                        return date.getDay() + 1;
+                    case 'h':
+                        return padding(date.getHours(), $0.length);
+                    case 'm':
+                        return padding(date.getMinutes(), $0.length);
+                    case 's':
+                        return padding(date.getSeconds(), $0.length);
                 }
             });
         },
@@ -43,12 +53,24 @@ export default {
                     var _int = parseInt(matchs2[i]);
                     var sign = matchs1[i];
                     switch (sign.charAt(0)) {
-                        case 'y': _date.setFullYear(_int); break;
-                        case 'M': _date.setMonth(_int - 1); break;
-                        case 'd': _date.setDate(_int); break;
-                        case 'h': _date.setHours(_int); break;
-                        case 'm': _date.setMinutes(_int); break;
-                        case 's': _date.setSeconds(_int); break;
+                        case 'y':
+                            _date.setFullYear(_int);
+                            break;
+                        case 'M':
+                            _date.setMonth(_int - 1);
+                            break;
+                        case 'd':
+                            _date.setDate(_int);
+                            break;
+                        case 'h':
+                            _date.setHours(_int);
+                            break;
+                        case 'm':
+                            _date.setMinutes(_int);
+                            break;
+                        case 's':
+                            _date.setSeconds(_int);
+                            break;
                     }
                 }
                 return _date;
@@ -56,6 +78,22 @@ export default {
             return null;
         }
 
+    },
+    getUrlParams(urlStr) {
+        console.log("urls:"+urlStr);
+        if (typeof urlStr == "undefined") {
+            var url = decodeURI(location.search); //获取url中"?"符后的字符串
+        } else {
+            var url = "?" + urlStr.split("?")[1];
+        }
+        var theRequest = new Object();
+        if (url.indexOf("?") != -1) {
+            var str = url.substr(1);
+            var strs = str.split("&");
+            for (var i = 0; i < strs.length; i++) {
+                theRequest[strs[i].split("=")[0]] = decodeURI(strs[i].split("=")[1]);
+            }
+        }
+        return theRequest;
     }
-
 };

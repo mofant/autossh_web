@@ -123,6 +123,8 @@ export default {
       services: [],
       total: 0,
       page: 1,
+      limit: 10,
+      offset: 0,
       listLoading: false,
       sels: [], //列表选中列
 
@@ -159,9 +161,12 @@ export default {
     },
 
     getServices() {
+      var offset = (this.page - 1) * this.limit;
       let para = {
         page: this.page,
-        name: this.filters.name
+        name: this.filters.name,
+        limit: this.limit,
+        offset: offset,
       };
       this.listLoading = true;
       getServiceList(para).then(res => {
@@ -173,7 +178,7 @@ export default {
 
     handleCurrentChange(val) {
       this.page = val;
-      this.getUsers();
+      this.getServices();
     },
     //获取服务器列表
     getServers() {
@@ -253,14 +258,10 @@ export default {
         if (valid) {
           this.$confirm("确认提交吗？", "提示", {}).then(() => {
             this.addLoading = true;
-            //NProgress.start();
             let para = Object.assign({}, this.addForm);
-            //para.birth = (!para.birth || para.birth == '') ? '' : util.formatDate.format(new Date(para.birth), 'yyyy-MM-dd');
             createService(para).then(res => {
               this.addLoading = false;
-              //NProgress.done();
               res = res.data;
-              console.log(res);
               if (res.code == 500) {
                 this.$message({
                   message: res.msg,
