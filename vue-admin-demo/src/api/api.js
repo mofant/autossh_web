@@ -1,5 +1,6 @@
 import axios from 'axios';
 import store from '../vuex/store'
+import { Message } from 'element-ui'
 // import * as axios from './axios';
 
 axios.interceptors.request.use(function(config) {
@@ -23,12 +24,12 @@ axios.interceptors.response.use(response => {
                 message: 'token失效,请重新登录!',
                 type: 'warning',
                 center: true,
-                onClose:function () {
-                    console.log('关闭了看下');
-                    router.replace({
-                    path: '/login',
-                    });
-                }
+                // onClose:function () {
+                //     console.log('关闭了看下');
+                //     router.push({
+                //         path: '/login',
+                //     });
+                // }
             });
         }
     return Promise.reject(error) //返回接口返回的错误信息
