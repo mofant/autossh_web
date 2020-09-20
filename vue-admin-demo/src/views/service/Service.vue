@@ -3,12 +3,6 @@
     <!--工具条-->
     <el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
       <el-form :inline="true" :model="filters">
-        <!-- <el-form-item>
-          <el-input v-model="filters.name" placeholder="服务名称"></el-input>
-        </el-form-item>
-        <el-form-item>
-          <el-button type="primary" v-on:click="getServices">查询</el-button>
-        </el-form-item> -->
         <el-form-item>
           <el-button type="primary" @click="handleAdd">新增</el-button>
         </el-form-item>
@@ -58,9 +52,7 @@
           <el-input v-model="editForm.port"></el-input>
         </el-form-item>
         <el-form-item label="所在服务器">
-          <el-select v-model="editForm.dep_server" placeholder="请选择">
-            <el-option v-for="item in servers" :key="item.id" :label="item.name" :value="item.id"></el-option>
-          </el-select>
+          <dynanicSelector v-on:selectChange="handleSelectChange" :kolId="editForm.dep_server" getValueAPIName="getServerList" meta="editForm"></dynanicSelector>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -80,9 +72,7 @@
           <el-input v-model="addForm.port"></el-input>
         </el-form-item>
         <el-form-item label="所在服务器">
-          <el-select v-model="addForm.dep_server" placeholder="请选择">
-            <el-option v-for="item in servers" :key="item.id" :label="item.name" :value="item.id"></el-option>
-          </el-select>
+          <dynanicSelector v-on:selectChange="handleSelectChange" getValueAPIName="getServerList" meta="addForm"></dynanicSelector>          
         </el-form-item>
         <!-- ASDF -->
       </el-form>
@@ -104,8 +94,12 @@ import {
   delServer
 } from "../../api/api";
 import { getServerList } from "../../api/api";
+import dynanicSelector from '../dynaicLoadSelector'
 
 export default {
+  components: {
+    dynanicSelector
+  },  
   data() {
     return {
       server_types: [
@@ -307,10 +301,26 @@ export default {
     //     })
     //     .catch(() => {});
     // }
+    handleSelectChange: function(emitValue) {
+      if(emitValue.getValueAPIName == "getServerList") {
+        if(emitValue.meta == "addForm") {
+          this.addForm.dep_server = emitValue.selectValue;
+        } else {
+          this.editForm.dep_server = emitValue.selectValue;
+        }
+      } else {
+        if(emitValue.meta == "addForm") {
+          this.addForm.service = emitValue.selectValue;
+        } else {
+          this.editForm.service = emitValue.selectValue;
+        }
+      }
+    },    
   },
   mounted() {
     this.getServices();
     this.getServers();
+    this.edit_form = this.editForm;
   }
 };
 </script>

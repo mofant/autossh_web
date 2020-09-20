@@ -3,12 +3,6 @@
     <!--工具条-->
     <el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
       <el-form :inline="true" :model="filters">
-        <!-- <el-form-item>
-          <el-input v-model="filters.name" placeholder="代理名称"></el-input>
-        </el-form-item> -->
-        <!-- <el-form-item>
-          <el-button type="primary" v-on:click="getProxys">查询</el-button>
-        </el-form-item> -->
         <el-form-item>
           <el-button type="primary" @click="handleAdd">新增</el-button>
         </el-form-item>
@@ -51,41 +45,15 @@
         style="float:right;"
       ></el-pagination>
     </el-col>
-
-    <!--编辑界面-->
-    <el-dialog title="编辑" :visible.sync="editFormVisible" :close-on-click-modal="false">
-      <el-form :model="editForm" label-width="130px" ref="editForm">
-        <el-form-item label="服务名称" prop="name">
-          <el-input v-model="editForm.name" auto-complete="off"></el-input>
-        </el-form-item>
-        <el-form-item label="服务端口">
-          <el-input v-model="editForm.port"></el-input>
-        </el-form-item>
-        <el-form-item label="所在服务器">
-          <el-select v-model="editForm.dep_server" placeholder="请选择">
-            <el-option v-for="item in servers" :key="item.id" :label="item.name" :value="item.id"></el-option>
-          </el-select>
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click.native="editFormVisible = false">取消</el-button>
-        <el-button type="primary" @click.native="editSubmit" :loading="editLoading">提交</el-button>
-      </div>
-    </el-dialog>
-
     <!--新增界面-->
     <el-dialog title="新增" :visible.sync="addFormVisible" :close-on-click-modal="false">
       <el-form :model="addForm" label-width="130px" ref="addForm">
         <!-- ASDF -->
         <el-form-item label="服务名称">
-          <el-select v-model="addForm.service" placeholder="请选择">
-            <el-option v-for="item in services" :key="item.id" :label="item.name" :value="item.id"></el-option>
-          </el-select>
+          <dynanicSelector v-on:selectChange="handleSelectChange" getValueAPIName="getServiceList" meta="addForm"></dynanicSelector>
         </el-form-item>
         <el-form-item label="代理服务器">
-          <el-select v-model="addForm.proxy_server" placeholder="请选择">
-            <el-option v-for="item in servers" :key="item.id" :label="item.name" :value="item.id"></el-option>
-          </el-select>
+          <dynanicSelector v-on:selectChange="handleSelectChange" getValueAPIName="getServerList" meta="addForm"></dynanicSelector>
         </el-form-item>
         <el-form-item label="代理端口">
           <el-input v-model="addForm.proxy_port"></el-input>
@@ -123,8 +91,12 @@ import {
   stopProxy,
   deleteProxy
 } from "../../api/api";
+import dynanicSelector from '../dynaicLoadSelector'
 
 export default {
+  components: {
+    dynanicSelector
+  },
   data() {
     return {
       filters: {
@@ -374,6 +346,8 @@ export default {
             this.addLoading = true;
             //NProgress.start();
             let para = Object.assign({}, this.addForm);
+            console.log(para);
+            return;
             //para.birth = (!para.birth || para.birth == '') ? '' : util.formatDate.format(new Date(para.birth), 'yyyy-MM-dd');
             createProxy(para).then(res => {
               this.addLoading = false;
@@ -425,6 +399,22 @@ export default {
     //     })
     //     .catch(() => {});
     // }
+    handleSelectChange: function(emitValue) {
+      if(emitValue.getValueAPIName == "getServerList") {
+        if(emitValue.meta == "addForm") {
+          this.addForm.proxy_server = emitValue.selectValue;
+        } else {
+          this.editForm.proxy_server = emitValue.selectValue;
+        }
+      } else {
+        if(emitValue.meta == "addForm") {
+          this.addForm.service = emitValue.selectValue;
+        } else {
+          this.editForm.service = emitValue.selectValue;
+        }
+      }
+      console.log(emitValue);
+    },
   },
   mounted() {
     this.getServers();
