@@ -346,14 +346,11 @@ export default {
             this.addLoading = true;
             //NProgress.start();
             let para = Object.assign({}, this.addForm);
-            console.log(para);
-            return;
             //para.birth = (!para.birth || para.birth == '') ? '' : util.formatDate.format(new Date(para.birth), 'yyyy-MM-dd');
             createProxy(para).then(res => {
               this.addLoading = false;
               //NProgress.done();
               res = res.data;
-              console.log(res);
               if (res.code == 500) {
                 this.$message({
                   message: res.msg,
