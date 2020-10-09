@@ -29,7 +29,7 @@ class ServerListView(mixins.ListModelMixin,
     queryset = Server.objects.all()
     serializer_class = ServerSerializer
 
-    def get(self, request, *args, **kwargs):
+    def get(self, request, *args, **kwargs):        
         return self.list(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
@@ -38,7 +38,6 @@ class ServerListView(mixins.ListModelMixin,
                 port=int(request.data.get("port")),
                 user=request.data.get("username"),
                 password=request.data.get("password")):
-            res = self.create(request, *args, **kwargs)
             return self.create(request, *args, **kwargs)
         else:
             return Response("服务器无法连接，请检查连接信息")

@@ -127,7 +127,7 @@ def is_server_connectable(*,
     try:
         conn.open()
         if conn.is_connected:
-            conn.disconnect()
+            conn.close()
             return True
         return False
     except Exception as e:
